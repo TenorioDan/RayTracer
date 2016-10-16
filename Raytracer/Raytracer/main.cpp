@@ -13,6 +13,8 @@
 #include "Vect.h";
 #include "Ray.h";
 #include "Camera.h";
+#include "Color.h";
+#include "Light.h";
 
 using namespace std;
 
@@ -119,6 +121,24 @@ int main(int argc, char *argv[])
 	Vect X(1, 0, 0);
 	Vect Y(0, 1, 0);
 	Vect Z(0, 0, 1);
+
+	Vect cameraPosition = Vect(3, 1.5, -4);
+	Vect lookAt = Vect();
+
+	Vect differenceBetween = cameraPosition - lookAt;
+	Vect cameraDirection = differenceBetween.negative().normalize();
+	Vect cameraRight = Y.crossProduct(cameraDirection).normalize();
+	Vect cameraDown = cameraRight.crossProduct(cameraDirection).normalize();
+
+	Camera sceneCamera = Camera(cameraPosition, cameraDirection, cameraRight, cameraDown);
+
+	Color whiteLight = Color(1.0, 1.0, 1.0, 0.0);
+	Color prettyGreen = Color(0.5, 1.0, 0.5, 0.3);
+	Color gray = Color(0.5, 0.5, 0.5, 0.0);
+	Color black = Color(0.0, 0.0, 0.0, 0.0);
+
+	Vect lightPosition(-7, 10, -10);
+	Light sceneLight = Light(lightPosition, whiteLight);
 
 	// look at each pixel one at time and return a color
 	for (int x = 0; x < width; x++) 

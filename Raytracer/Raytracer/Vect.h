@@ -20,6 +20,7 @@ public:
 	Vect normalize();
 	Vect negative();
 	
+	// returns a vector that is orthogonal to the two vectors
 	Vect crossProduct(Vect v);
 
 	// operator overloading for vector operations
