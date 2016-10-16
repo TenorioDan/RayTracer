@@ -10,6 +10,10 @@
 #include <stdio.h>
 #include <time.h>
 
+#include "Vect.h";
+#include "Ray.h";
+#include "Camera.h";
+
 using namespace std;
 
 struct RGBType 
@@ -23,7 +27,7 @@ struct RGBType
 /*
 * A function that we can pass color data to that spits out a file
 */
-void SaveBMP(const char* filename, int w, int h, int dpi, RGBType* data) 
+void saveBMP(const char* filename, int w, int h, int dpi, RGBType* data) 
 {
 	FILE *f;
 	int k = w*h;
@@ -35,7 +39,11 @@ void SaveBMP(const char* filename, int w, int h, int dpi, RGBType* data)
 
 	int ppm = dpi*m;
 
-	unsigned char bmpFileHeader[14] = {'B', 'M', 0,0,0,0,  0,0,0,0,  54,0,0,0};
+
+	// Create the file structure for a bitmap file
+	// info at https://en.wikipedia.org/wiki/BMP_file_format
+
+	unsigned char bmpFileHeader[14] = { 'B', 'M', 0,0,0,0,  0,0,0,0,  54,0,0,0 };
 	unsigned char bmpInfoHeader[40] = { 40,0,0,0,  0,0,0,0,  0,0,0,0,  1,0,24,0 };
 
 	bmpFileHeader[2] = (unsigned char)(filesize);
@@ -106,8 +114,11 @@ int main(int argc, char *argv[])
 	int width = 640;
 	int height = 490;
 	int n = width*height;
-
 	RGBType* pixels = new RGBType[n];
+
+	Vect X(1, 0, 0);
+	Vect Y(0, 1, 0);
+	Vect Z(0, 0, 1);
 
 	// look at each pixel one at time and return a color
 	for (int x = 0; x < width; x++) 
@@ -134,7 +145,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	SaveBMP("scene.bmp", width, height, dpi, pixels);
+	saveBMP("scene.bmp", width, height, dpi, pixels);
 
 	return 0;
 }
