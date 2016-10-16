@@ -3,7 +3,7 @@
 #include "Color.h";
 #include "Object.h"
 
-class Plane : Object
+class Plane : public Object
 {
 	Vect normal;
 	double distance;

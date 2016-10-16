@@ -31,8 +31,8 @@ public:
 	double operator*(Vect v);
 
 	// performs scalar multiplication 
-	Vect operator*(double s);
-
+	friend Vect operator*(double s, Vect v);
+	friend Vect operator*(Vect v, double s);
 	// For printing vectors
 	friend std::ostream& operator<<(std::ostream& os, const Vect v);
 };

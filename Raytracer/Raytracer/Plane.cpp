@@ -31,7 +31,8 @@ double Plane::findIntersection(Ray ray)
 	}
 	else
 	{
-		double b = normal * (ray.getOrigin() + (normal*distance).negative());
+		// TODO return to this, it might be wrong
+		double b = normal * (ray.getOrigin() - (normal*distance));
 		return -1 * b/a; // the distance from the ray origin to the intersection
 	}
 

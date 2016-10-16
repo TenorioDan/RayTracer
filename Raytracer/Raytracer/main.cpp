@@ -15,8 +15,10 @@
 #include "Camera.h";
 #include "Color.h";
 #include "Light.h";
+#include "Object.h";
 #include "Sphere.h";
 #include "Plane.h";
+
 
 using namespace std;
 
@@ -44,7 +46,7 @@ void saveBMP(const char* filename, int w, int h, int dpi, RGBType* data)
 	int ppm = dpi*m;
 
 
-	// Create the file structure for a bitmap file
+	// Create the file structure for a bitmap image
 	// info at https://en.wikipedia.org/wiki/BMP_file_format
 
 	unsigned char bmpFileHeader[14] = { 'B', 'M', 0,0,0,0,  0,0,0,0,  54,0,0,0 };
@@ -104,7 +106,64 @@ void saveBMP(const char* filename, int w, int h, int dpi, RGBType* data)
 	fclose(f);
 }
 
-int currentPixel;
+
+int nearestObjectIndex(vector<double> intersections)
+{
+	int mininumIndex;
+
+	// prevent unnecessary calculations
+	if (intersections.size() == 0) 
+	{
+		return -1;
+	}
+	else if (intersections.size() == 1)
+	{
+		if (intersections.at(0) > 0) 
+		{
+			// of that intersection is greater than zero then its the index of minimum value
+			return 0;
+		}
+		else 
+		{
+			// otherwise the only interesection is negative
+			// the ray missed every object in the scene
+			return -1;
+		}
+	}
+	else
+	{
+		// there is more than one intersection and we have to find the minimum value
+		// first find the maximum value
+		double max = 0;
+		for (int i = 0; i < intersections.size(); i++)
+		{
+			if (max > intersections.at(i))
+				max = intersections.at(i);
+		}
+
+		 // then starting form the maximum value find the minimum position
+		if (max > 0)
+		{
+			// we only want positive intersections
+			for (int index = 0; index < intersections.size(); index++) 
+			{
+				if (intersections.at(index) > 0 && intersections.at(index) <= max)
+				{
+					max = intersections.at(index);
+					mininumIndex = index;
+				}
+			}
+
+			return mininumIndex;
+		}
+		else
+		{
+			// all intersections were negative
+			return -1;
+		}
+	}
+}
+
 
 /*
 * A ray tracer is a program that produces an image where each pixel in that image has a color
@@ -116,7 +175,8 @@ int main(int argc, char *argv[])
 
 	int dpi = 72;
 	int width = 640;
-	int height = 490;
+	int height = 480;
+	double aspectRatio = (double)width / (double)height;
 	int n = width*height;
 	RGBType* pixels = new RGBType[n];
 
@@ -149,6 +209,13 @@ int main(int argc, char *argv[])
 	Sphere sphere1 = Sphere(origin, 1, prettyGreen);
 	Plane plane1 = Plane(Y, -1, maroon);
 
+	vector<Object*> sceneObjects;
+	sceneObjects.push_back(dynamic_cast<Object*>(&sphere1));
+	sceneObjects.push_back(dynamic_cast<Object*>(&plane1));
+
+	int currentPixel;
+	double xAmount, yAmount;
+
 	// look at each pixel one at time and return a color
 	for (int x = 0; x < width; x++) 
 	{
@@ -157,6 +224,44 @@ int main(int argc, char *argv[])
 			// an indexing value that's gonna change as we go through the pixels
 			// and is a value used to determine the x and y coordiantes of an individual pixel;
 			currentPixel = y*width + x;
+
+			// start with no anti-aliasing
+			// offset a position from the camera direction to create rays that go to the left, right, above and below
+			// of this direction
+			if (width > height) 
+			{
+				// the image is wider than it is taller
+				xAmount = ((x + 0.5) / width) * aspectRatio - (((width - height) / (double)height) / 2);
+				yAmount = ((height - y) + 0.5) / height;
+			}
+			else if (height > width)
+			{
+				// the image is taller than it is wide
+				xAmount = (x + 0.5) / width;
+				yAmount = (((height - y) + 0.5) / height) / aspectRatio - (((height - width) / (double)width) / 2);
+			}
+			else
+			{
+				// the image is square
+				xAmount = (x + 0.5) / width;
+				yAmount = ((height - y) + 0.5) / height;
+			}
+
+			Vect cameraRayOrigin = sceneCamera.getPosition();
+			Vect cameraRayDirection = cameraDirection + ( (cameraRight * (xAmount - 0.5)) + (cameraDown * (yAmount - 0.5)) );
+			cameraRayDirection = cameraRayDirection.normalize();
+
+			// This ray goes into the pixel and looks for intersections
+			Ray cameraRay = Ray(cameraRayOrigin, cameraRayDirection);
+
+			vector<double> intersections;
+
+			for (auto object : sceneObjects)
+			{
+				intersections.push_back(object->findIntersection(cameraRay));
+			}
+
+			int indexOfNearestObject = nearestObjectIndex(intersections);
 
 			// restrict the color to a specific portion of the image
 			if ( (x > 200 && x < 440) && (y > 200 && y < 280)) 

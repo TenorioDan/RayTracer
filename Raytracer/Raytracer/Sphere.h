@@ -3,7 +3,7 @@
 #include "Color.h";
 #include "Object.h"
 
-class Sphere : Object
+class Sphere : public Object
 {
 	Vect center;
 	double radius;
@@ -17,5 +17,8 @@ public:
 	Vect getCenter() { return center; }
 	double getRadius() { return radius; }
 	Color getColor() { return color; }
+
+	Vect getNormalAt(Vect);
+	double findIntersection(Ray ray);
 
 };

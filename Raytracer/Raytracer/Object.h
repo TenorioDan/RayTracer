@@ -10,6 +10,7 @@ public:
 	Object();
 
 	Color getColor() { return Color(0.0, 0.0, 0.0, 0.0); }
-	double findIntersection(Ray);
+	virtual Vect getNormalAt(Vect);
+	virtual double findIntersection(Ray);
 
 };

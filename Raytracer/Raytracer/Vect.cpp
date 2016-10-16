@@ -52,9 +52,15 @@ double Vect::operator*(Vect v)
 	return x*v.getX() + y*v.getY() + z*v.getZ();
 }
 
-Vect Vect::operator*(double s)
+Vect operator*(double s, Vect v)
 {
-	return Vect(s*x, s*y, s*z);
+	return Vect(s*v.getX(), s*v.getY(), s*v.getZ());
+}
+
+
+Vect operator*(Vect v, double s)
+{
+	return Vect(s*v.getX(), s*v.getY(), s*v.getZ());
 }
 
 std::ostream& operator<<(std::ostream& os, Vect v)
