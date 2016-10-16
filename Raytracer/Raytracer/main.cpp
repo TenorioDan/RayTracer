@@ -15,6 +15,8 @@
 #include "Camera.h";
 #include "Color.h";
 #include "Light.h";
+#include "Sphere.h";
+#include "Plane.h";
 
 using namespace std;
 
@@ -118,10 +120,11 @@ int main(int argc, char *argv[])
 	int n = width*height;
 	RGBType* pixels = new RGBType[n];
 
+	Vect origin = Vect();
 	Vect X(1, 0, 0);
 	Vect Y(0, 1, 0);
 	Vect Z(0, 0, 1);
-
+	
 	Vect cameraPosition = Vect(3, 1.5, -4);
 	Vect lookAt = Vect();
 
@@ -132,13 +135,19 @@ int main(int argc, char *argv[])
 
 	Camera sceneCamera = Camera(cameraPosition, cameraDirection, cameraRight, cameraDown);
 
+	// Colors
 	Color whiteLight = Color(1.0, 1.0, 1.0, 0.0);
 	Color prettyGreen = Color(0.5, 1.0, 0.5, 0.3);
 	Color gray = Color(0.5, 0.5, 0.5, 0.0);
 	Color black = Color(0.0, 0.0, 0.0, 0.0);
+	Color maroon = Color(0.5, 0.25, 0.25, 0);
 
 	Vect lightPosition(-7, 10, -10);
 	Light sceneLight = Light(lightPosition, whiteLight);
+
+	// scene objects
+	Sphere sphere1 = Sphere(origin, 1, prettyGreen);
+	Plane plane1 = Plane(Y, -1, maroon);
 
 	// look at each pixel one at time and return a color
 	for (int x = 0; x < width; x++) 
