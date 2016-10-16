@@ -41,6 +41,8 @@ double Sphere::findIntersection(Ray ray)
 	double c = pow(rayOriginX - sphereCenterX, 2) + pow(rayOriginY - sphereCenterY, 2) + pow(rayOriginZ - sphereCenterZ, 2) - (radius*radius);
 	double discriminant = b*b - 4*a*c;
 
+	//std::cout << discriminant << endl;
+
 	if (discriminant > 0) 
 	{
 		// the ray intersects the sphere

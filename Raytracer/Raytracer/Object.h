@@ -9,7 +9,7 @@ class Object
 public:
 	Object();
 
-	Color getColor() { return Color(0.0, 0.0, 0.0, 0.0); }
+	virtual Color getColor() { return Color(0.0, 0.0, 0.0, 0.0); }
 	virtual Vect getNormalAt(Vect);
 	virtual double findIntersection(Ray);
 

@@ -16,9 +16,9 @@ public:
 	// methods
 	Vect getNormal() { return normal; }
 	double getDistance() { return distance; }
-	Color getColor() { return color; }
-	
-	Vect getNormalAt(Vect);
-	double findIntersection(Ray);
+
+	Color getColor() override { return color; }
+	Vect getNormalAt(Vect) override;
+	double findIntersection(Ray) override;
 
 };

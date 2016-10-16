@@ -137,7 +137,7 @@ int nearestObjectIndex(vector<double> intersections)
 		double max = 0;
 		for (int i = 0; i < intersections.size(); i++)
 		{
-			if (max > intersections.at(i))
+			if (max < intersections.at(i))
 				max = intersections.at(i);
 		}
 
@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
 	Vect differenceBetween = cameraPosition - lookAt;
 	Vect cameraDirection = differenceBetween.negative().normalize();
 	Vect cameraRight = Y.crossProduct(cameraDirection).normalize();
-	Vect cameraDown = cameraRight.crossProduct(cameraDirection).normalize();
+	Vect cameraDown = cameraRight.crossProduct(cameraDirection);
 
 	Camera sceneCamera = Camera(cameraPosition, cameraDirection, cameraRight, cameraDown);
 
@@ -264,17 +264,20 @@ int main(int argc, char *argv[])
 			int indexOfNearestObject = nearestObjectIndex(intersections);
 
 			// restrict the color to a specific portion of the image
-			if ( (x > 200 && x < 440) && (y > 200 && y < 280)) 
+			if (indexOfNearestObject == -1) 
 			{
-				pixels[currentPixel].r = 23;
-				pixels[currentPixel].g = 222;
-				pixels[currentPixel].b = 10;
-			}
-			else
-			{
+				// we missed every object in the scene so the pixel will be black
 				pixels[currentPixel].r = 0;
 				pixels[currentPixel].g = 0;
 				pixels[currentPixel].b = 0;
+			}
+			else
+			{
+				// index corresponds to an object in the scene
+				Color pixelColor = sceneObjects.at(indexOfNearestObject)->getColor();
+				pixels[currentPixel].r = pixelColor.getRed();
+				pixels[currentPixel].g = pixelColor.getGreen();
+				pixels[currentPixel].b = pixelColor.getBlue();
 			}
 		}
 	}
