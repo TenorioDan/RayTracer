@@ -171,11 +171,12 @@ Color getColorAt(Vect intersectionPosition, Vect intersectingRayDirection, vecto
 	Object& nearestObject = *sceneObjects.at(indexOfNearestObject);
 	Color nearestObjectColor = nearestObject.getColor();
 	Vect nearestObjectNormal = nearestObject.getNormalAt(intersectionPosition);
+
 	Color finalColor = nearestObjectColor.scaleColor(ambientLight);
 
 	for (auto lightSource : lightSources)
 	{
-		Vect lightDirection = (lightSource->getPosition() - intersectingRayDirection).normalize();
+		Vect lightDirection = (lightSource->getPosition() - intersectionPosition).normalize();
 		float cosineAngle = nearestObjectNormal * lightDirection;
 
 		if (cosineAngle > 0)
@@ -183,7 +184,7 @@ Color getColorAt(Vect intersectionPosition, Vect intersectingRayDirection, vecto
 			// test for shadows
 			bool shadowed = false;
 
-			Vect distanceToLight = (lightSource->getPosition() - intersectionPosition).normalize();
+			Vect distanceToLight = (lightSource->getPosition() - intersectionPosition);
 			float distanceToLightMagnitude = distanceToLight.magnitude();
 
 			// Create a new ray in the direction from the intersection point to the light source.
@@ -285,10 +286,14 @@ int main(int argc, char *argv[])
 
 	// scene objects
 	Sphere sphere1 = Sphere(origin, 1, red);
+	Sphere sphere2 = Sphere(Vect(-1, -0.5, -0.5), .5, maroon);
+	Sphere sphere3 = Sphere(Vect(1.75, 0, 0), .5, prettyGreen);
 	Plane plane1 = Plane(Y, -1, gray);
 
 	vector<Object*> sceneObjects;
 	sceneObjects.push_back(dynamic_cast<Object*>(&sphere1));
+	sceneObjects.push_back(dynamic_cast<Object*>(&sphere2));
+	sceneObjects.push_back(dynamic_cast<Object*>(&sphere3));
 	sceneObjects.push_back(dynamic_cast<Object*>(&plane1));
 
 	int currentPixel;
