@@ -152,6 +152,7 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Raycpp.cpp" />
+    <ClCompile Include="Source.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Vect.cpp" />
   </ItemGroup>
@@ -162,6 +163,7 @@
     <ClInclude Include="Object.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Ray.h" />
+    <ClInclude Include="Source.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Vect.h" />
   </ItemGroup>

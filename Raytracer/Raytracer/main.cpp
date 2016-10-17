@@ -14,6 +14,7 @@
 #include "Ray.h";
 #include "Camera.h";
 #include "Color.h";
+#include "Source.h";
 #include "Light.h";
 #include "Object.h";
 #include "Sphere.h";
@@ -164,6 +165,77 @@ int nearestObjectIndex(vector<double> intersections)
 	}
 }
 
+Color getColorAt(Vect intersectionPosition, Vect intersectingRayDirection, vector<Object*> sceneObjects, 
+				int indexOfNearestObject, double accuracy, double ambientLight, vector<Source*> lightSources)
+{
+	Object& nearestObject = *sceneObjects.at(indexOfNearestObject);
+	Color nearestObjectColor = nearestObject.getColor();
+	Vect nearestObjectNormal = nearestObject.getNormalAt(intersectionPosition);
+	Color finalColor = nearestObjectColor.scaleColor(ambientLight);
+
+	for (auto lightSource : lightSources)
+	{
+		Vect lightDirection = (lightSource->getPosition() - intersectingRayDirection).normalize();
+		float cosineAngle = nearestObjectNormal * lightDirection;
+
+		if (cosineAngle > 0)
+		{
+			// test for shadows
+			bool shadowed = false;
+
+			Vect distanceToLight = (lightSource->getPosition() - intersectionPosition).normalize();
+			float distanceToLightMagnitude = distanceToLight.magnitude();
+
+			// Create a new ray in the direction from the intersection point to the light source.
+			// If this new ray intersects with anything on its way to the light source, then it's in a shadow
+			Ray shadowRay = Ray(intersectionPosition, (lightSource->getPosition() - intersectingRayDirection).normalize());
+
+			vector<double> secondaryIntersections;
+
+			for (int object_index = 0; object_index < sceneObjects.size() && shadowed == false; object_index++) {
+				secondaryIntersections.push_back(sceneObjects.at(object_index)->findIntersection(shadowRay));
+			}
+
+			for (auto secondaryIntersection : secondaryIntersections)
+			{
+				if (secondaryIntersection > accuracy)
+				{
+					if (secondaryIntersection <= distanceToLightMagnitude)
+						shadowed = true;
+
+					break;
+				}
+			}
+
+			if (!shadowed)
+			{
+				finalColor = finalColor + (nearestObjectColor * lightSource->getColor()).scaleColor(cosineAngle);
+
+				if (nearestObjectColor.getSpecial() > 0 && nearestObjectColor.getSpecial() <= 1)
+				{
+					// special [0-1] will refer to shinyness of object
+					double dot1 = nearestObjectNormal * intersectingRayDirection.negative();
+					Vect scalar1 = nearestObjectNormal * dot1;
+					Vect add1 = scalar1 + (nearestObjectNormal * dot1);
+					Vect scalar2 = add1 * 2;
+					Vect sub1 = scalar2 - intersectingRayDirection;
+					Vect reflectionDirection = sub1.normalize();
+
+					double specular = reflectionDirection * lightDirection;
+
+					if (specular > 0)
+					{
+						specular = pow(specular, 10);
+						finalColor = finalColor + lightSource->getColor().scaleColor(specular);
+					}
+				}
+			}
+		}
+	}
+	
+	//cout << finalColor << endl;
+	return finalColor.clip();
+}
 
 /*
 * A ray tracer is a program that produces an image where each pixel in that image has a color
@@ -176,9 +248,12 @@ int main(int argc, char *argv[])
 	int dpi = 72;
 	int width = 640;
 	int height = 480;
-	double aspectRatio = (double)width / (double)height;
 	int n = width*height;
 	RGBType* pixels = new RGBType[n];
+	
+	double aspectRatio = (double)width / (double)height;
+	double ambientLight = 0.2;
+	double accuracy = 0.000001;
 
 	Vect origin = Vect();
 	Vect X(1, 0, 0);
@@ -198,16 +273,19 @@ int main(int argc, char *argv[])
 	// Colors
 	Color whiteLight = Color(1.0, 1.0, 1.0, 0.0);
 	Color prettyGreen = Color(0.5, 1.0, 0.5, 0.3);
+	Color red = Color(0.75, 0.15, 0.15, 0.3);
 	Color gray = Color(0.5, 0.5, 0.5, 0.0);
 	Color black = Color(0.0, 0.0, 0.0, 0.0);
 	Color maroon = Color(0.5, 0.25, 0.25, 0);
 
 	Vect lightPosition(-7, 10, -10);
 	Light sceneLight = Light(lightPosition, whiteLight);
+	vector<Source*> lightSources;
+	lightSources.push_back(dynamic_cast<Source*>(&sceneLight));
 
 	// scene objects
-	Sphere sphere1 = Sphere(origin, 1, prettyGreen);
-	Plane plane1 = Plane(Y, -1, maroon);
+	Sphere sphere1 = Sphere(origin, 1, red);
+	Plane plane1 = Plane(Y, -1, gray);
 
 	vector<Object*> sceneObjects;
 	sceneObjects.push_back(dynamic_cast<Object*>(&sphere1));
@@ -274,10 +352,17 @@ int main(int argc, char *argv[])
 			else
 			{
 				// index corresponds to an object in the scene
-				Color pixelColor = sceneObjects.at(indexOfNearestObject)->getColor();
-				pixels[currentPixel].r = pixelColor.getRed();
-				pixels[currentPixel].g = pixelColor.getGreen();
-				pixels[currentPixel].b = pixelColor.getBlue();
+				if (intersections.at(indexOfNearestObject) > accuracy) 
+				{
+					// determine the position and direction vectors at the point of intersection
+					Vect intersectionPosition = cameraRayOrigin + (cameraRayDirection * intersections.at(indexOfNearestObject));
+					Vect intersectingRayDirection = cameraRayDirection;
+
+					Color intersectionColor = getColorAt(intersectionPosition, intersectingRayDirection, sceneObjects, indexOfNearestObject, accuracy, ambientLight, lightSources);
+					pixels[currentPixel].r = intersectionColor.getRed();
+					pixels[currentPixel].g = intersectionColor.getGreen();
+					pixels[currentPixel].b = intersectionColor.getBlue();
+				}
 			}
 		}
 	}

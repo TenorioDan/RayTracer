@@ -33,7 +33,6 @@ double Plane::findIntersection(Ray ray)
 	{
 		// TODO return to this, it might be wrong
 		double b = normal * (ray.getOrigin() - (normal*distance));
-		//std::cout << -1 * b / a << std::endl;
 		return -1 * b/a; // the distance from the ray origin to the intersection
 	}
 
