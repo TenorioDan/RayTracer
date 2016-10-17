@@ -9,3 +9,13 @@ Ray::Ray(Vect o, Vect d)
 	: origin(o), direction(d)
 {
 }
+
+Vect Ray::getOrigin() 
+{ 
+	return origin; 
+}
+
+Vect Ray::getDirection() 
+{ 
+	return direction; 
+}

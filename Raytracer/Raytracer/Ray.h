@@ -10,6 +10,6 @@ public:
 	Ray(Vect, Vect);
 
 	// methods
-	Vect getOrigin() { return origin; }
-	Vect getDirection() { return direction; }
+	Vect getOrigin();
+	Vect getDirection();
 };

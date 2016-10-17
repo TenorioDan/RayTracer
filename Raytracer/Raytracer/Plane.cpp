@@ -17,6 +17,21 @@ Vect Plane::getNormalAt(Vect point)
 	return normal;
 }
 
+Vect Plane::getNormal() 
+{ 
+	return normal; 
+}
+
+double Plane::getDistance() 
+{ 
+	return distance; 
+}
+
+Color Plane::getColor()
+{
+	return color;
+}
+
 
 // the distance from our ray origin to the point of intersection
 double Plane::findIntersection(Ray ray)

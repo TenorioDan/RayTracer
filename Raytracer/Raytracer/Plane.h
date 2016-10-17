@@ -14,10 +14,10 @@ public:
 	Plane(Vect, double, Color);
 
 	// methods
-	Vect getNormal() { return normal; }
-	double getDistance() { return distance; }
+	Vect getNormal();
+	double getDistance();
 
-	Color getColor() override { return color; }
+	Color getColor() override;
 	Vect getNormalAt(Vect) override;
 	double findIntersection(Ray) override;
 

@@ -14,11 +14,11 @@ public:
 	Sphere(Vect, double, Color);
 
 	// methods
-	Vect getCenter() { return center; }
-	double getRadius() { return radius; }
+	Vect getCenter();
+	double getRadius();
 
-	Color getColor()  override { return color; }
+	Color getColor()  override;
 	Vect getNormalAt(Vect) override;
-	double findIntersection(Ray ray) override;
+	double findIntersection(Ray) override;
 
 };

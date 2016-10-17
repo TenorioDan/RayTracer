@@ -6,6 +6,6 @@ class Source
 {
 public:
 	Source();
-	virtual Vect getPosition() { return Vect(); }
-	virtual Color getColor() { return Color(1, 1, 1, 0); }
+	virtual Vect getPosition();
+	virtual Color getColor();
 };

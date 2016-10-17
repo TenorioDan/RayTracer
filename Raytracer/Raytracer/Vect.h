@@ -12,27 +12,27 @@ public:
 	Vect(double, double, double);
 
 	// methods
-	double getX() { return x; }
-	double getY() { return y; }
-	double getZ() { return z; }
+	double getX();
+	double getY();
+	double getZ();
 	
 	double magnitude();
 	Vect normalize();
 	Vect negative();
 	
 	// returns a vector that is orthogonal to the two vectors
-	Vect crossProduct(Vect v);
+	Vect crossProduct(Vect);
 
 	// operator overloading for vector operations
-	Vect operator+(Vect v);
-	Vect operator-(Vect v);
+	Vect operator+(Vect);
+	Vect operator-(Vect);
 	
 	// performs the dot product on two vectors
-	double operator*(Vect v);
+	double operator*(Vect);
 
 	// performs scalar multiplication 
-	friend Vect operator*(double s, Vect v);
-	friend Vect operator*(Vect v, double s);
+	friend Vect operator*(double, Vect);
+	friend Vect operator*(Vect, double);
 	// For printing vectors
-	friend std::ostream& operator<<(std::ostream& os, const Vect v);
+	friend std::ostream& operator<<(std::ostream&, const Vect);
 };

@@ -17,6 +17,22 @@ Vect Sphere::getNormalAt(Vect point)
 	return (point - center).normalize();
 }
 
+
+Vect Sphere::getCenter()
+{ 
+	return center; 
+}
+
+double Sphere::getRadius() 
+{ 
+	return radius; 
+}
+
+Color Sphere::getColor() 
+{ 
+	return color; 
+}
+
 double Sphere::findIntersection(Ray ray)
 {
 	Vect rayOrigin = ray.getOrigin();

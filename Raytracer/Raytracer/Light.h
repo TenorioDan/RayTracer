@@ -14,7 +14,7 @@ public:
 	Light(Vect, Color);
 
 	// methods
-	Vect getPosition() override { return position; }
-	Color getColor() override { return color; }
+	Vect getPosition() override;
+	Color getColor() override;
 
 };

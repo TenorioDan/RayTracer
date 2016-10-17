@@ -8,15 +8,15 @@ class Color
 public:
 	Color();
 	Color(double, double, double, double);
-	double getRed() { return red; }
-	double getGreen() { return green; }
-	double getBlue() { return blue; }
-	double getSpecial() { return special; }
+	double getRed();
+	double getGreen();
+	double getBlue();
+	double getSpecial();
 
-	double setRed(double value) { red = value; return red; }
-	double setGreen(double value) { green = value;  return green; }
-	double setBlue(double value) { blue = value;  return blue;  }
-	double setSpecial(double value) { special = value;  return special;  }
+	double setRed(double value);
+	double setGreen(double value);
+	double setBlue(double value);
+	double setSpecial(double value);
 
 	double brightness();
 	Color scaleColor(double);
@@ -27,5 +27,5 @@ public:
 	Color operator+(Color);
 	Color operator-(Color);
 	Color operator*(Color);
-	friend std::ostream& operator<<(std::ostream& os, const Color c);
+	friend std::ostream& operator<<(std::ostream&, const Color);
 };

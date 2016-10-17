@@ -10,6 +10,18 @@ Color::Color(double r, double g, double b, double s)
 {
 }
 
+double Color::getRed() { return red; }
+double Color::getGreen() { return green; }
+double Color::getBlue() { return blue; }
+double Color::getSpecial() { return special; }
+
+double Color::setRed(double value) { red = value; return red; }
+double Color::setGreen(double value) { green = value;  return green; }
+double Color::setBlue(double value) { blue = value;  return blue; }
+double Color::setSpecial(double value) { special = value;  return special; }
+
+
+
 double Color::brightness()
 {
 	return (red + green + blue) / 3;

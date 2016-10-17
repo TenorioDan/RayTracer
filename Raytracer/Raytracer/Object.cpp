@@ -14,3 +14,8 @@ Vect Object::getNormalAt(Vect point)
 {
 	return Vect();
 }
+
+Color Object::getColor()
+{
+	return Color(0.0, 0.0, 0.0, 0.0);
+}

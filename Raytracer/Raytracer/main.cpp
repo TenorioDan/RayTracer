@@ -286,7 +286,7 @@ int main(int argc, char *argv[])
 
 	// scene objects
 	Sphere sphere1 = Sphere(origin, 1, red);
-	Sphere sphere2 = Sphere(Vect(-1, -0.5, -0.5), .5, maroon);
+	Sphere sphere2 = Sphere(Vect(-0.5, 1.5, -0.75), .5, maroon);
 	Sphere sphere3 = Sphere(Vect(1.75, 0, 0), .5, prettyGreen);
 	Plane plane1 = Plane(Y, -1, gray);
 

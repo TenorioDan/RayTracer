@@ -10,6 +10,10 @@ Vect::Vect(double i, double j, double k)
 {
 }
 
+double Vect::getX() { return x; }
+double Vect::getY() { return y; }
+double Vect::getZ() { return z; }
+
 
 double Vect::magnitude()
 {

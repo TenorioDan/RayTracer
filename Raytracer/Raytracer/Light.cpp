@@ -9,3 +9,13 @@ Light::Light(Vect pos, Color c)
 	: position(pos), color(c)
 {
 }
+
+Vect Light::getPosition() 
+{ 
+	return position; 
+}
+
+Color Light::getColor() 
+{ 
+	return color; 
+}
