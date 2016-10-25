@@ -19,6 +19,7 @@
 #include "Object.h";
 #include "Sphere.h";
 #include "Plane.h";
+#include "Triangle.h";
 
 
 using namespace std;
@@ -278,6 +279,7 @@ int main(int argc, char *argv[])
 	Color gray = Color(0.5, 0.5, 0.5, 0.0);
 	Color black = Color(0.0, 0.0, 0.0, 0.0);
 	Color maroon = Color(0.5, 0.25, 0.25, 0);
+	Color orange = Color(0.95, 0.85, 0.25, 0);
 
 	Vect lightPosition(-7, 10, -10);
 	Light sceneLight = Light(lightPosition, whiteLight);
@@ -289,12 +291,14 @@ int main(int argc, char *argv[])
 	Sphere sphere2 = Sphere(Vect(-0.5, 1.5, -0.75), .5, maroon);
 	Sphere sphere3 = Sphere(Vect(1.75, 0, 0), .5, prettyGreen);
 	Plane plane1 = Plane(Y, -1, gray);
+	Triangle triangle1 = Triangle(Vect(3, 0, 0), Vect(0, 3, 0), Vect(0, 0, 3), orange);
 
 	vector<Object*> sceneObjects;
 	sceneObjects.push_back(dynamic_cast<Object*>(&sphere1));
 	sceneObjects.push_back(dynamic_cast<Object*>(&sphere2));
 	sceneObjects.push_back(dynamic_cast<Object*>(&sphere3));
 	sceneObjects.push_back(dynamic_cast<Object*>(&plane1));
+	sceneObjects.push_back(dynamic_cast<Object*>(&triangle1));
 
 	int currentPixel;
 	double xAmount, yAmount;
